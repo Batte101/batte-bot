@@ -53,7 +53,9 @@ bot.on('message', msg => {
                 msg.delete();
             }, 1000);            
         } else {
-            msg.channel.send(msg.content);
+            if (msg.content.toLowerCase() !== prefix + 'dev'){
+                msg.channel.send(msg.content);
+            }
             msg.delete();
         }   
 
@@ -62,9 +64,6 @@ bot.on('message', msg => {
         switch(args[0]) {
             case 'clear':
                 msg.channel.bulkDelete(100);
-                break;
-            case 'dev':
-                msg.delete();
                 break;
         }
     }
