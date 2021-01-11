@@ -1,4 +1,6 @@
 # discord-bot
+(Still in development)
+
 Just my first work in JSCode. 
 
 One day I desided to become a bot, but due it's impossibility, I made bot that can become ME.
