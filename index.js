@@ -95,9 +95,15 @@ bot.on('message', msg => {
         
         if (msgID !== null && !msg.content.includes('~')) {
             bot.users.fetch(msgID).then((user) => {
-                user.send(msg.content);
-                msg.channel.send('Отправлено.');
+                if (msg.attachments.size > 0) {
+                    user.send(msg.content, msg.attachments.first());           
+                } else {
+                    if (msg.content.toLowerCase() !== prefix + 'dev'){ 
+                        user.send(msg.content);
+                    }
+                }                   
             })
+            msg.channel.send('Отправлено.');
         }
 
         let args = msg.content.substring(prefix.length).split(" ");
