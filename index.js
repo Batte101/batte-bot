@@ -8,6 +8,7 @@ let prefix = config.prefix;
 
 var msgID = String;
 var devMode = Boolean; 
+var otpravleno = Boolean;
 
 // Запуск бота
 bot.on('ready', () => { 
@@ -15,6 +16,7 @@ bot.on('ready', () => {
     console.log('Bot is Online.');
     msgID = null;
     devMode = false;
+    otpravleno = true;
     bot.generateInvite(['CREATE_INSTANT_INVITE','ADD_REACTIONS','VIEW_CHANNEL',
     'SEND_MESSAGES','SEND_TTS_MESSAGES','MANAGE_MESSAGES','EMBED_LINKS','ATTACH_FILES',
     'READ_MESSAGE_HISTORY','MENTION_EVERYONE','USE_EXTERNAL_EMOJIS','VIEW_GUILD_INSIGHTS',
@@ -91,19 +93,24 @@ bot.on('message', msg => {
 
 // Ответ из ЛС
 bot.on('message', msg => {
-    if (!msg.author.bot && msg.guild === null && msg.author == myID) {
+    if (msg.guild === null && msg.author == myID) {
         
         if (msgID !== null && !msg.content.includes('~')) {
-            bot.users.fetch(msgID).then((user) => {
+            otpravleno = false;
+            bot.users.fetch(msgID).then((user) => {                
                 if (msg.attachments.size > 0) {
                     user.send(msg.content, msg.attachments.first());           
                 } else {
                     if (msg.content.toLowerCase() !== prefix + 'dev'){ 
                         user.send(msg.content);
                     }
-                }                   
+                } 
+                               
             })
-            msg.channel.send('Отправлено.');
+            setTimeout(function(){
+                otpravleno = true; 
+                msg.channel.send('Отправлено.');
+            }, 500);               
         }
 
         let args = msg.content.substring(prefix.length).split(" ");
@@ -122,20 +129,18 @@ bot.on('message', msg => {
             case 'clear':
                 msg.channel.delete();
                 break;
-        }
-
-        
+        }        
     }
 })
 
 // Очистка ЛС от бота
 bot.on('message', msg => {
-    if (msg.guild === null && msg.author.bot && msg.content == 'Отправлено.') {
+    if (msg.guild === null && msg.author.bot && msg.content == 'Отправлено.' 
+    && otpravleno) {
         setTimeout(function(){ 
             msg.delete();
         }, 3000);  
     }
 })
-
 
 bot.login(token);
