@@ -28,12 +28,12 @@ bot.on('message', msg => {
     if (msg.author.id == myID && msg.content.toLowerCase() == prefix + 'dev') {
         // Включение dev mode
         if (!devMode) {
-            msg.channel.send('---- Начало НРП чата. ----');
+            msg.channel.send('-------- Начало НРП чата. --------');
             devMode = true;
         } else 
         // Выключение dev mode
         if (devMode) {
-            msg.channel.send('---- Конец НРП чата. ----');
+            msg.channel.send('-------- Конец НРП чата. --------');
             devMode = false;
         }
 
@@ -53,7 +53,7 @@ bot.on('message', msg => {
                 msg.delete();
             }, 1000);            
         } else {
-            if (msg.content.toLowerCase() !== prefix + 'dev'){
+            if (msg.content.toLowerCase() !== prefix + 'dev'){ 
                 msg.channel.send(msg.content);
             }
             msg.delete();
