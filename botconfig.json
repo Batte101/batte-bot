@@ -1,6 +1,6 @@
 {
-    "dev": "0",
-    "token":"<YOUR BOT TOKEN HERE>",
-    "prefix":"~",
-    "myID":"<YOUR DISCORD ID HERE>"
+    "token": "<YOUR BOT TOKEN HERE>",
+    "prefix": "~",
+    "myID": "<YOUR DISCORD ID HERE>",
+    "devID": "<GUILD ID FOR TESTING>"    
 }
