@@ -36,12 +36,12 @@ bot.on('ready', () => {
 function muteUpdate(msg) {
     // Включение Mute Mode
     if (!muteMode) {
-        msg.channel.send('-------- Начало НРП чата. --------');
+        msg.channel.send('-- Bot Muted --');
         muteMode = true;
     } else
     // Выключение Mute Mode
     if (muteMode) {
-        msg.channel.send('-------- Конец НРП чата. --------');
+        msg.channel.send('-- Bot Unmuted --');
         muteMode = false;
     }
     if (msg.guild !== null) {
@@ -53,11 +53,12 @@ function muteUpdate(msg) {
 function replyUpdate(msg) {
     // Включение Reply Mode
     if (!replyMode) {
-        msg.channel.send('Я кому-то понадобился?');
+        msg.channel.send('-- Reply Mode **ON** --');
         replyMode = true;
     } else
     // Выключение Reply Mode
     if (replyMode) {
+        msg.channel.send('-- Reply Mode **OFF** --');
         replyMode = false;
     }
     if (msg.guild !== null) {
@@ -69,12 +70,12 @@ function replyUpdate(msg) {
 function devUpdate(msg) {
     // Включение Dev Mode
     if (!devMode) {
-        msg.channel.send('Режим разработки включен.');
+        msg.channel.send('-- Dev Mode **ON** --');
         devMode = true;
     } else
     // Выключение Dev Mode
     if (devMode) {
-        msg.channel.send('Режим разработки выключен.');
+        msg.channel.send('-- Dev Mode **OFF** --');
         devMode = false;
     }
     if (msg.guild !== null) {
@@ -96,9 +97,9 @@ function crash() {
     msg.channel.send('Hello world!');
 }
 
-// Реакция на мои сообщения
 bot.on('message', msg => {
-    if (!devMode || msg.guild.id == devID || msg.guild === null) {
+    if (!devMode || msg.guild == null || msg.guild.id == devID) {
+        // Реакция на мои сообщения
         if (msg.author.id == myID) {
 
             // Реакция на сообщения на серверах:
@@ -205,11 +206,20 @@ bot.on('message', msg => {
         }
 
         // Очистка от бота
-        if (msg.guild === null && msg.author.bot && msg.content == 'Отправлено.'
-        && otpravleno) {
-            setTimeout(function(){
-                msg.delete();
-            }, 3000);
+        if (msg.author.bot) {
+            if (msg.guild === null && msg.content == 'Отправлено.' && 
+            otpravleno){
+                setTimeout(function(){
+                    msg.delete();
+                }, 3000);
+            }
+            if (msg.guild !== null) {
+                if (msg.content.startsWith('-- ')) {
+                    setTimeout(function(){
+                        msg.delete();
+                    }, 1500);
+                }
+            }
         }
 
         // Уведомление в ЛС при упоминании бота
