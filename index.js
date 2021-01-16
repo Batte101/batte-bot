@@ -13,6 +13,23 @@ var replyMode = Boolean;
 var devMode = Boolean;
 var muteMode = Boolean;
 var otpravleno = Boolean;
+const helpList = 'Бот умеет принимать личные сообщения, ' + 
+'отвечать на них, информировать об упоминаниях в чате и заменять ' + 
+'сообщения хозяина на свои.\n\
+\n\
+Доступные команды:\n\
+**'+ prefix +'help** - вывод этого сообщения.\n\
+**'+ prefix +'mute** - включение/выключение замены сообщений.\n\
+**'+ prefix +'reply** - включение/выключение Режима Автоответа.\n\
+**'+ prefix +'clear** <100> - удаление сообщений.\n\
+**'+ prefix +'ID** <12345> - выбор пользователя для отправки сообщений. (Только ЛС)\n\
+**'+ prefix +'chatID** <12345> - выбор канала для чтения и отправки сообщений в канале. (Только ЛС)\n\
+**'+ prefix +'stop** - сброс выбора пользователя/канала.\n\
+**'+ prefix +'delete** <msgID> - удалить сообщение по его ID.\n\
+**'+ prefix +'nick** <NAME> - Замена ника бота. При пустом - сброс. (Только на сервере)\n\
+\n\
+**'+ prefix +'crash yes** - остановка работы бота. (Только ЛС)\n\
+**'+ prefix +'dev** - включение/выключение режима разработки.';
 
 // Запуск бота
 bot.on('ready', () => {
@@ -32,16 +49,33 @@ bot.on('ready', () => {
     });
 });
 
+// Dev Mode
+function devUpdate(msg) {
+    // Включение Dev Mode
+    if (!devMode) {
+        msg.channel.send('-- Dev Mode **ON** --');
+        devMode = true;
+    } else
+    // Выключение Dev Mode
+    if (devMode) {
+        msg.channel.send('-- Dev Mode **OFF** --');
+        devMode = false;
+    }
+    if (msg.guild !== null) {
+        msg.delete();
+    }
+}
+
 // Mute Mode
 function muteUpdate(msg) {
     // Включение Mute Mode
     if (!muteMode) {
-        msg.channel.send('-- Bot Muted --');
+        msg.channel.send('-- Bot **Muted** --');
         muteMode = true;
     } else
     // Выключение Mute Mode
     if (muteMode) {
-        msg.channel.send('-- Bot Unmuted --');
+        msg.channel.send('-- Bot **Unmuted** --');
         muteMode = false;
     }
     if (msg.guild !== null) {
@@ -60,23 +94,6 @@ function replyUpdate(msg) {
     if (replyMode) {
         msg.channel.send('-- Reply Mode **OFF** --');
         replyMode = false;
-    }
-    if (msg.guild !== null) {
-        msg.delete();
-    }
-}
-
-// Dev Mode
-function devUpdate(msg) {
-    // Включение Dev Mode
-    if (!devMode) {
-        msg.channel.send('-- Dev Mode **ON** --');
-        devMode = true;
-    } else
-    // Выключение Dev Mode
-    if (devMode) {
-        msg.channel.send('-- Dev Mode **OFF** --');
-        devMode = false;
     }
     if (msg.guild !== null) {
         msg.delete();
@@ -147,11 +164,31 @@ bot.on('message', msg => {
             // Префикс-команды
             let args = msg.content.substring(prefix.length).split(" ");
             switch(args[0]) {
+                // Вывод инструкций
+                case 'help':
+                    const embed = new Discord.MessageEmbed()
+                    .setTitle('Команды персонального бота.')
+                    .setDescription(helpList)
+                    .setAuthor('by Batte')
+                    .setThumbnail(bot.user.avatarURL())
+                    .setColor('#88b6c4');
+                    msg.channel.send(embed);
+                    if (msg.guild !== null) {
+                        msg.delete();
+                    }
+                    break;
                 // Очистка чата
                 case 'clear':
                     if (msg.guild !== null && args[1] !== null) {
                         msg.channel.bulkDelete(args[1]);
                     }
+                    break;
+                // Удалить сообщение по ID
+                case 'delete':
+                    msg.channel.messages.fetch(args[1]).then(sms => {
+                        sms.delete()
+                    });
+                    msg.delete();
                     break;
                 // Reply Mode
                 case 'reply':
@@ -199,8 +236,20 @@ bot.on('message', msg => {
                 // Краш бота (ПОНИМАЮ)
                 case 'crash':
                     if (msg.guild === null && args[1] === 'yes') {
+                        msg.channel.send('Бот отключен.');
                         crash();
                     }
+                    break;
+                // Изменение ника
+                case 'nick':
+                    msg.guild.members.fetch(bot.user.id).then(user => {
+                        if (args[1] != null) {
+                            user.setNickname(args[1]);
+                        } else {
+                            user.setNickname('Batte');
+                        }
+                    })
+                    msg.delete();
                     break;
             }
         }
