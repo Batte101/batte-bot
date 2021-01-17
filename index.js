@@ -300,12 +300,8 @@ bot.on('message', msg => {
         if (replyMode && (msg.mentions.has(bot.user.id) || msg.mentions.has(myID))
         && !msg.author.bot) {
             setTimeout(function(){
-                msg.channel.startTyping();
-                setTimeout(function(){
-                    msg.channel.stopTyping();
-                    msg.reply('Что?');
-                }, 1000);
-            }, randomTime(1500) + 1500);
+                msg.reply('Что?');
+            }, randomTime(2000) + 2000);
         }
 
         // Пересылка всего канала в ЛС, если выбран канал
