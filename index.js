@@ -23,7 +23,7 @@ const helpList = 'Бот умеет принимать личные сообще
 **'+ prefix +'reply** - Включение/выключение Режима Автоответа.\n\
 **'+ prefix +'dev** - Включение/выключение Режима Разработки.\n\
 \n\
-Только ЛС:\n\
+Только в ЛС:\n\
 **'+ prefix +'ID** <12345> - Выбор пользователя для отправки сообщений.\n\
 **'+ prefix +'chatID** <12345> - Выбор канала для чтения и отправки сообщений в канале.\n\
 **'+ prefix +'stop** - Сброс выбора пользователя/канала.\n\
@@ -112,6 +112,11 @@ function sendMsg(msg, adres) {
     }
 }
 
+// Выбор рандомного по максимуму
+function randomTime(max) {
+    Math.floor(Math.random() * Math.floor(max));
+}
+
 // Остановка бота (принудительная)
 function crash() {
     msg.channel.send('Hello world!');
@@ -170,10 +175,10 @@ bot.on('message', msg => {
                 // Вывод инструкций
                 case 'help':
                     const embed = new Discord.MessageEmbed()
-                    .setTitle('Команды персонального бота.')
-                    .setDescription(helpList)
                     .setAuthor('by Batte')
+                    .setTitle('Команды персонального бота.')
                     .setThumbnail(bot.user.avatarURL())
+                    .setDescription(helpList)
                     .setColor('#88b6c4');
                     msg.channel.send(embed);
                     if (msg.guild !== null) {
@@ -294,7 +299,13 @@ bot.on('message', msg => {
         // Реплай при пинге (Reply Mode)
         if (replyMode && (msg.mentions.has(bot.user.id) || msg.mentions.has(myID))
         && !msg.author.bot) {
-            msg.reply('Что?');
+            setTimeout(function(){
+                msg.channel.startTyping();
+                setTimeout(function(){
+                    msg.channel.stopTyping();
+                    msg.reply('Что?');
+                }, 1000);
+            }, randomTime(1500) + 1500);
         }
 
         // Пересылка всего канала в ЛС, если выбран канал
