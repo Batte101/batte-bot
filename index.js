@@ -170,6 +170,7 @@ bot.on('message', msg => {
             }       
 
             // Префикс-команды
+            if (msg.content.startsWith(prefix)) {
             let args = msg.content.substring(prefix.length).split(" ");
             switch(args[0]) {
                 // Вывод инструкций
@@ -277,6 +278,7 @@ bot.on('message', msg => {
                     }, 1500);
                 }
             }
+        }
         }
 
         // Уведомление в ЛС при упоминании бота
