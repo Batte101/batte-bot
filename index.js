@@ -6,6 +6,7 @@ let token = config.token;
 let myID = config.myID;
 let prefix = config.prefix;
 let devID = config.devID;
+let botNick = config.botNick;
 
 var msgID = String;
 var chatID = String;
@@ -257,7 +258,7 @@ bot.on('message', msg => {
                         if (args[1] != null) {
                             user.setNickname(args[1]);
                         } else {
-                            user.setNickname('Batte');
+                            user.setNickname(botNick);
                         }
                     })
                     msg.delete();
