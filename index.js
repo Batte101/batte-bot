@@ -244,9 +244,11 @@ bot.on('message', msg => {
                     break;
                 // Краш бота (ПОНИМАЮ)
                 case 'crash':
-                    if (msg.guild === null && args[1] === 'yes') {
+                    if (msg.guild === null) {
                         msg.channel.send('Бот отключен.');
-                        crash();
+                        setTimeout(function(){
+                            crash();
+                        }, 2000);
                     }
                     break;
                 // Изменение ника
