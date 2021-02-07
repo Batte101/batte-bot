@@ -2,5 +2,6 @@
     "token": "<YOUR BOT TOKEN HERE>",
     "prefix": "~",
     "myID": "<YOUR DISCORD ID HERE>",
-    "devID": "<GUILD ID FOR TESTING>"    
+    "devID": "<GUILD ID FOR TESTING>",
+    "botNick": "<STANDART BOT NICKNAME>"    
 }
