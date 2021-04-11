@@ -263,6 +263,17 @@ bot.on('message', msg => {
                     })
                     msg.delete();
                     break;
+                // Выход из гильдии
+                case 'leave':
+                    if (msg.guild !== null && args[1] === 'Confirm') {
+                        bot.users.fetch(myID).then((user) => {
+                            user.send('Произошел выход с сервера ' + msg.guild.name + '.');
+                        });
+                        msg.delete();
+                        msg.channel.send('Всем пока!');
+                        msg.guild.leave();
+                    }
+                    break;
             }
         }
 
